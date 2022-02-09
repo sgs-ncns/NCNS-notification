@@ -1,0 +1,30 @@
+{
+  "name": "notify_server",
+  "version": "1.0.0",
+  "description": "notify server for NCNS project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "build": "tsc -p .",
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/index.ts"
+  },
+  "author": "jonghyeon, sanghyeok",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.15",
+    "express": "^4.17.2",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "@types/amqplib": "^0.8.2",
+    "@types/cors": "^2.8.12",
+    "amqplib": "^0.8.0",
+    "cors": "^2.8.5",
+    "firebase-admin": "^10.0.2",
+    "mongoose": "^6.2.1"
+  }
+}
