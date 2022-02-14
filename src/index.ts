@@ -1,7 +1,7 @@
-import express, { Request, Response, NextFunction } from "express";
-import cors from "cors";
-import pushRouter from "./routes/push";
-import fastPushRouter from "./routes/fastPush";
+const express = require("express");
+const cors = require("cors");
+const pushRouter = require("./routes/push");
+const fastPushRouter = require("./routes/fastPush");
 import amqp from "amqplib/callback_api.js";
 import { MONGO_CONN_URL, MQ_CONN_URL } from "./config/env";
 
@@ -37,6 +37,7 @@ amqp.connect(MQ_CONN_URL, function (err, conn) {
   });
 });
 
+// cors 설정 추후 react 포트와 ios 포트만 추가할 예정입니다.
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
