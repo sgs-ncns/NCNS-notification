@@ -41,7 +41,8 @@ npm run dev //for develop
 
 ## 시스템 구성도
 
-(추가 예정)
+![알림서버 아키텍처 drawio](https://user-images.githubusercontent.com/64491659/153785880-03d0fe07-851e-4d40-b2be-46a1e53ae640.png)
+
 
 ## API 명세서
 
@@ -55,19 +56,19 @@ npm run dev //for develop
 
 ```markdown
 ├─common
-│  ├─types.ts
+│  └─types.ts
 ├─config
 ├─models
 │  ├─kkanbu.ts
-│  ├─normal.ts
+│  └─normal.ts
 ├─routes
 │  ├─fastPush.ts
-│  ├─push.ts
+│  └─push.ts
 ├─services
 │  ├─MQPubService.ts
-│  ├─notifyService.ts
+│  └─notifyService.ts
 ├─utils
-│  ├─notifyService.ts
+│  └─notifyService.ts
 └─index.ts
 ```
 
