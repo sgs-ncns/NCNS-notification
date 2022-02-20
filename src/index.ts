@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import cors from "cors";
 import pushRouter from "./routes/push";
 import fastPushRouter from "./routes/fastPush";
@@ -8,7 +8,7 @@ import { MONGO_CONN_URL, MQ_CONN_URL } from "./config/env";
 const app = express();
 const port = "8000";
 
-/* DB initializing */
+/* Mongo DB를 초기화 하는 파트입니다. */
 const mongoose = require("mongoose");
 mongoose
   .connect(MONGO_CONN_URL, {

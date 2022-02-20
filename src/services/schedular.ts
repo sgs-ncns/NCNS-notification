@@ -1,6 +1,11 @@
 import { admin } from "..";
 import { CATEGORY } from "../common/types";
 
+// 자체적으로 만든 배치처리 로직입니다.
+// like map과 comment map이 전역으로 존재하며
+// schedule 함수는 만약 맵에 인자로 전달 받은 accountName이 존재하면 count를 증가시키고
+// 없다면 schedular 함수를 호출하여 로직을 진행합니다.
+
 const likeMap = new Map();
 const commentMap = new Map();
 
@@ -8,17 +13,18 @@ type CATEGORY = typeof CATEGORY[keyof typeof CATEGORY];
 
 export const schedule = (
   accountName: string,
+  postId: number,
   category: CATEGORY
   // postId: number
 ) => {
-  if (likeMap.has(accountName) || commentMap.has(accountName)) {
+  if (likeMap.has(postId) || commentMap.has(postId)) {
     switch (category) {
       case CATEGORY.Like: {
-        likeMap.set(accountName, likeMap.get(accountName) + 1);
+        likeMap.set(postId, likeMap.get(postId) + 1);
         break;
       }
       case CATEGORY.Comment: {
-        commentMap.set(accountName, commentMap.get(accountName) + 1);
+        commentMap.set(postId, commentMap.get(postId) + 1);
         break;
       }
       default:
@@ -28,42 +34,43 @@ export const schedule = (
     //초기 한 번 실행
     switch (category) {
       case "like": {
-        likeMap.set(accountName, 1);
-        commentMap.set(accountName, 0);
+        likeMap.set(postId, 1);
+        commentMap.set(postId, 0);
         break;
       }
       case "comment": {
-        commentMap.set(accountName, 1);
-        likeMap.set(accountName, 0);
+        commentMap.set(postId, 1);
+        likeMap.set(postId, 0);
         break;
       }
       default:
         return;
     }
-    schedular(accountName);
+    schedular(postId, accountName);
   }
   console.log("like", likeMap);
   console.log("comment", commentMap);
 };
 
-const schedular = (accountName: string) => {
+// schedular 함수는 setTimeout 함수를 통해 일정 시간이 지나면
+// 콜백 함수를 실행합니다.
+const schedular = (postId: number, accountName: string) => {
   console.log("accountName schedular started");
   setTimeout(async () => {
     const message = {
-      // token:
-      // "fveDN6CIZEX1peRH6agkQy:APA91bGP94sI4T6mX8UOX95enGuVaAu4rBVAxqOU8HQNtPyynYeTW8255kJXocaHZU1aSpyCIQO2ighyiHSIFSrGXOdA8K4qhU1drSHXK3hbW72fuUSh7GaG9WyzLkxmkw4lCre6FlrW",
       topic: accountName,
       notification: {
         title: "kkanbustagram",
         body: `${accountName}님의 게시물에 좋아요 ${likeMap.get(
-          accountName
+          postId
         )}개와 댓글${commentMap.get(accountName)}개가 달렸습니다.`,
       },
     };
     try {
+      // 일정 시간 동안 map에 담긴 좋아요와 댓글 개수를 FCM으로 전송합니다.
       const res = await admin.messaging().send(message);
-      likeMap.delete(accountName);
-      commentMap.delete(accountName);
+      likeMap.delete(postId);
+      commentMap.delete(postId);
       console.log("성공" + res);
       console.log(likeMap, commentMap);
       return;
