@@ -48,22 +48,29 @@ export const schedule = (
     }
     schedular(postId, accountName);
   }
-  console.log("like", likeMap);
-  console.log("comment", commentMap);
 };
 
 // schedular 함수는 setTimeout 함수를 통해 일정 시간이 지나면
 // 콜백 함수를 실행합니다.
 const schedular = (postId: number, accountName: string) => {
   console.log("accountName schedular started");
+  let timeCount = 0;
+  let timerId = setInterval(() => {console.log(++timeCount)}, 1000);
+  setTimeout(() => clearInterval(timerId), 10000);
   setTimeout(async () => {
+    let content:string;
+    if(commentMap.get(postId) === 0) {
+      content = `${accountName}님의 게시물에 좋아요 ${likeMap.get(postId)}개가 달렸습니다.`
+    } else if(likeMap.get(postId) === 0) {
+      content = `${accountName}님의 게시물에 댓글 ${commentMap.get(postId)}개가 달렸습니다.`
+    } else {
+      content = `${accountName}님의 게시물에 좋아요 ${likeMap.get(postId)}개와 댓글${commentMap.get(postId)}개가 달렸습니다.`
+    }
     const message = {
       topic: accountName,
       notification: {
         title: "kkanbustagram",
-        body: `${accountName}님의 게시물에 좋아요 ${likeMap.get(
-          postId
-        )}개와 댓글${commentMap.get(accountName)}개가 달렸습니다.`,
+        body: content
       },
     };
     try {
@@ -71,8 +78,7 @@ const schedular = (postId: number, accountName: string) => {
       const res = await admin.messaging().send(message);
       likeMap.delete(postId);
       commentMap.delete(postId);
-      console.log("성공" + res);
-      console.log(likeMap, commentMap);
+      console.log("send to FCM");
       return;
     } catch (err) {
       console.log("보내기 실패 메시지:" + err);
